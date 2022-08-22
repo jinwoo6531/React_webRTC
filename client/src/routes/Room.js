@@ -22,14 +22,13 @@ const Room = (props) => {
 
         //peerB 실행
         socketRef.current.on('other user', (userID) => {
-          console.log('other user');
           callUser(userID);
           otherUser.current = userID;
         });
 
         //peerA 실행
         socketRef.current.on('user joined', (userID) => {
-          console.log('user joined');
+          console.log('1번 유저입장이요');
           otherUser.current = userID;
         });
 
@@ -42,7 +41,6 @@ const Room = (props) => {
   }, []);
 
   function callUser(userID) {
-    console.log('유저입니다.', userID);
     peerRef.current = createPeer(userID);
     userStream.current
       .getTracks()
@@ -54,6 +52,7 @@ const Room = (props) => {
   }
 
   function createPeer(userID) {
+    console.log(1);
     const peer = new RTCPeerConnection({
       iceServers: [
         {
@@ -75,6 +74,7 @@ const Room = (props) => {
   }
 
   function handleNegotiationNeededEvent(userID) {
+    console.log(2);
     peerRef.current
       .createOffer()
       .then((offer) => {
@@ -92,7 +92,7 @@ const Room = (props) => {
   }
 
   function handleRecieveCall(incoming) {
-    console.log(3333, incoming);
+    console.log('2번 peer 생성 및 answer 생성이요', incoming);
     peerRef.current = createPeer();
     const desc = new RTCSessionDescription(incoming.sdp);
     peerRef.current
@@ -121,7 +121,7 @@ const Room = (props) => {
   }
 
   function handleAnswer(message) {
-    console.log('answer', message);
+    console.log('3번 answer이요', message);
     const desc = new RTCSessionDescription(message.sdp);
     peerRef.current.setRemoteDescription(desc).catch((e) => console.log(e));
   }
@@ -137,6 +137,7 @@ const Room = (props) => {
   }
 
   function handleNewICECandidateMsg(incoming) {
+    console.log('4번 ice요');
     const candidate = new RTCIceCandidate(incoming);
 
     peerRef.current.addIceCandidate(candidate).catch((e) => console.log(e));

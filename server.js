@@ -23,7 +23,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('offer', (payload) => {
-    console.log('오퍼', payload);
     io.to(payload.target).emit('offer', payload);
   });
 
